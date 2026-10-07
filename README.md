@@ -45,3 +45,5 @@ DummyJSON é um serviço público de demonstração. PATCH e DELETE **não persi
 Em falhas, confira o passo e a resposta no HTML antes de classificar: 429, timeout e indisponibilidade são falhas de ambiente; uma diferença de contrato precisa ser investigada. Nenhuma dessas condições é convertida em aprovação.
 
 Referências: [documentação de produtos](https://dummyjson.com/docs/products), [Karate com Maven/Java](https://docs.karatelabs.io/getting-started/install-dependencies/), [relatórios nativos](https://docs.karatelabs.io/running-tests/test-reports/).
+
+Husky: com Node 24 e as dependências da stack instalados, rode `npm ci` para ativar o pre-commit. `npm run check:local` verifica o diff, o gate dos relatórios e os checks de tipos/lint existentes. O hook também bloqueia arquivos ignorados no índice. Testes que usam navegador, emulador ou API continuam no CI.

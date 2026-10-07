@@ -10,3 +10,5 @@ __pycache__/
 *.log
 results/
 reports/
+node_modules/
+.husky/_/

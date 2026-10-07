@@ -45,3 +45,5 @@ DummyJSON is a public demonstration service. PATCH and DELETE **do not persist**
 When a test fails, inspect the step and response in the HTML before classifying it: 429, timeouts and unavailability are environment failures; a contract difference requires investigation. None of these conditions is converted into a pass.
 
 References: [product documentation](https://dummyjson.com/docs/products), [Karate with Maven/Java](https://docs.karatelabs.io/getting-started/install-dependencies/), [native reports](https://docs.karatelabs.io/running-tests/test-reports/).
+
+Husky: with Node 24 and the stack dependencies installed, run `npm ci` to enable pre-commit. `npm run check:local` checks the diff, report gate and existing type/lint checks. The hook also rejects ignored files in the index. Browser, emulator and API tests remain in CI.
