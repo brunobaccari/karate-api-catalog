@@ -1,0 +1,51 @@
+name: Karate API tests
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check tracked files
+        shell: bash
+        run: |
+          tracked=$(git ls-files --cached --ignored --exclude-standard)
+          if [ -n "$tracked" ]; then
+            printf 'Ignored files are tracked:\n%s\n' "$tracked"
+            exit 1
+          fi
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Check summary gate
+        run: python3 scripts/summary.py --self-test
+      - name: Run catalog scenarios
+        id: tests
+        env:
+          API_BASE_URL: https://dummyjson.com
+        run: mvn -B -ntp clean verify
+      - name: Publish test summary
+        if: always()
+        env:
+          TEST_OUTCOME: ${{ steps.tests.outcome }}
+        run: python3 scripts/summary.py
+      - uses: actions/upload-artifact@v4
+        id: reports
+        if: always()
+        with:
+          name: karate-results
+          path: |
+            target/karate-reports/
+            target/surefire-reports/
+            target/summary.md
+          if-no-files-found: error
+          retention-days: 14
+      - name: Link artifact
+        if: always() && steps.reports.outcome == 'success'
+        env:
+          ARTIFACT_URL: ${{ steps.reports.outputs.artifact-url }}
+        run: printf '\n[Download karate-results](%s)\n' "$ARTIFACT_URL" >> "$GITHUB_STEP_SUMMARY"
